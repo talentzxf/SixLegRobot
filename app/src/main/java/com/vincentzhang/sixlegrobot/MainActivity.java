@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String base_url = "http://192.168.17.65:5001";
+    private String base_url = "http://192.168.17.59:5001";
 
     public void onStop(View view) {
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response.substring(0,500));
+                        textView.setText("Response is: "+ response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -85,14 +85,98 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onForward(View view) {
+        final TextView textView = findViewById(R.id.textViewHttpResult);
+
+        String stop_url = base_url + "/robot/move/go";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        textView.setText("Response is: "+ response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textView.setText("That didn't work!" + error);
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     public void onBack(View view) {
+        final TextView textView = findViewById(R.id.textViewHttpResult);
+
+        String stop_url = base_url + "/robot/move/back";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        textView.setText("Response is: "+ response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textView.setText("That didn't work!" + error);
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     public void onLeft(View view) {
+        final TextView textView = findViewById(R.id.textViewHttpResult);
+
+        String stop_url = base_url + "/robot/move/left";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        textView.setText("Response is: "+ response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textView.setText("That didn't work!" + error);
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     public void onRight(View view) {
+        final TextView textView = findViewById(R.id.textViewHttpResult);
+
+        String stop_url = base_url + "/robot/move/right";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        textView.setText("Response is: "+ response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textView.setText("That didn't work!" + error);
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
