@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Create another thread to listen to multicast
-
+        multicastReceiver.setActivity(this);
         Thread t = new Thread(multicastReceiver);
         t.start();
     }
