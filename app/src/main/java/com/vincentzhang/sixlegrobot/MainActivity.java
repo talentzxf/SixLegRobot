@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +18,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+
 public class MainActivity extends AppCompatActivity {
+
+    MulticastReceiver multicastReceiver = new MulticastReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,13 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // Create another thread to listen to multicast
+
+        Thread t = new Thread(multicastReceiver);
+        t.start();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,126 +67,59 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String base_url = "http://192.168.17.59:5001";
+    private String base_url = "http://%s:5001";
 
-    public void onStop(View view) {
+    private String getUrl(String postFix) {
+        if (this.multicastReceiver.getRobotIp().equalsIgnoreCase("unknown")) {
+            return null;
+        }
 
+        return String.format(this.base_url, this.multicastReceiver.getRobotIp()) + postFix;
+    }
+
+    void sendCommand(String remoteCommand) {
         final TextView textView = findViewById(R.id.textViewHttpResult);
 
-        String stop_url = base_url + "/robot/move/stop";
+        String stop_url = getUrl(remoteCommand);
+        if (stop_url != null) {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            textView.setText("Response is: " + response);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    textView.setText("That didn't work!" + error);
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        } else {
+            textView.setText("Haven't gotten ip address");
+        }
+    }
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!" + error);
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+    public void onStop(View view) {
+        this.sendCommand("/robot/move/stop");
     }
 
     public void onForward(View view) {
-        final TextView textView = findViewById(R.id.textViewHttpResult);
-
-        String stop_url = base_url + "/robot/move/go";
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!" + error);
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        this.sendCommand("/robot/move/go");
     }
 
     public void onBack(View view) {
-        final TextView textView = findViewById(R.id.textViewHttpResult);
-
-        String stop_url = base_url + "/robot/move/back";
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!" + error);
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        this.sendCommand("/robot/move/back");
     }
 
     public void onLeft(View view) {
-        final TextView textView = findViewById(R.id.textViewHttpResult);
-
-        String stop_url = base_url + "/robot/move/left";
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!" + error);
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        this.sendCommand("/robot/move/left");
     }
 
     public void onRight(View view) {
-        final TextView textView = findViewById(R.id.textViewHttpResult);
-
-        String stop_url = base_url + "/robot/move/right";
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!" + error);
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        this.sendCommand("/robot/move/right");
     }
 }
