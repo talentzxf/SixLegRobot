@@ -15,7 +15,7 @@ public class MulticastReceiver implements Runnable {
 
     String multicast_address = "224.1.1.1";
     Integer multicast_port = 6666;
-    String robotIp = "unknown";
+    String robotIp = "192.168.17.59";
 
     Activity activity;
 

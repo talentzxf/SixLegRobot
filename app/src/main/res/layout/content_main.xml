@@ -20,6 +20,15 @@
         android:onClick="onStop"/>
 
     <Button
+        android:id="@+id/adjustPosButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AdjustPos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/forwardButton"
+        android:onClick="onAdjustPos"/>
+
+    <Button
         android:id="@+id/forwardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,5 +1,9 @@
 package com.vincentzhang.sixlegrobot;
 
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -121,5 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onRight(View view) {
         this.sendCommand("/robot/move/right");
+    }
+
+    public void onAdjustPos(View view){
+        // TODO: Switch to adjust device pos activity
+        Intent intent = new Intent(this, DeviceRotationActivity.class);
+        startActivity(intent);
     }
 }
