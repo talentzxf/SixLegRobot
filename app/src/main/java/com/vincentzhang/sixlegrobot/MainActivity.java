@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 // Map from [0,10] to [-1.0, -2.0]
 
                 float heightValue = -(float)progress/10.0f - 1.0f;
-                sendCommand(Request.Method.PUT, "/robot/height?height="+progress);
+                sendCommand(Request.Method.PUT, "/robot/height?height="+heightValue);
             }
 
             @Override
