@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 public class MainActivity extends AppCompatActivity {
 
     MulticastReceiver multicastReceiver = new MulticastReceiver();
+    SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,31 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        seekBar = findViewById(R.id.heightSeekBar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                final TextView textView = findViewById(R.id.textViewHttpResult);
+                textView.setText("Progress:" + progress);
+                // Map from [0,10] to [-1.0, -2.0]
+
+                float heightValue = -(float)progress/10.0f - 1.0f;
+                sendCommand(Request.Method.PUT, "/robot/height?height="+progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
@@ -81,13 +108,18 @@ public class MainActivity extends AppCompatActivity {
         return String.format(this.base_url, this.multicastReceiver.getRobotIp()) + postFix;
     }
 
+    // Default is GET
     void sendCommand(String remoteCommand) {
+        sendCommand(Request.Method.GET, remoteCommand);
+    }
+
+    void sendCommand(int method, String remoteCommand) {
         final TextView textView = findViewById(R.id.textViewHttpResult);
 
         String stop_url = getUrl(remoteCommand);
         if (stop_url != null) {
             RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, stop_url,
+            StringRequest stringRequest = new StringRequest(method, stop_url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -127,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         this.sendCommand("/robot/move/right");
     }
 
-    public void onAdjustPos(View view){
+    public void onAdjustPos(View view) {
         // TODO: Switch to adjust device pos activity
         Intent intent = new Intent(this, DeviceRotationActivity.class);
         startActivity(intent);
