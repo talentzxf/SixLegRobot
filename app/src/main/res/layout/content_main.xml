@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:onClick="onStop"
         android:text="Stop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/leftButton"
+        app:layout_constraintEnd_toEndOf="@+id/backButton"
+        app:layout_constraintStart_toStartOf="@+id/backButton"
+        app:layout_constraintTop_toTopOf="@+id/leftButton" />
 
     <Button
         android:id="@+id/adjustPosButton"
@@ -25,18 +25,19 @@
         android:layout_height="wrap_content"
         android:onClick="onAdjustPos"
         android:text="AdjustPos"
-        app:layout_constraintBottom_toTopOf="@id/forwardButton"
+        app:layout_constraintBottom_toBottomOf="@+id/backButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/forwardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
         android:onClick="onForward"
         android:text="Forward"
-        app:layout_constraintBottom_toTopOf="@id/stopButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/stopButton"
+        app:layout_constraintStart_toStartOf="@+id/stopButton"
+        app:layout_constraintTop_toBottomOf="@+id/webView" />
 
     <Button
         android:id="@+id/backButton"
@@ -45,7 +46,7 @@
         android:onClick="onBack"
         android:text="Back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/adjustPosButton"
         app:layout_constraintTop_toBottomOf="@+id/stopButton" />
 
     <Button
@@ -54,9 +55,8 @@
         android:layout_height="wrap_content"
         android:onClick="onLeft"
         android:text="Left"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/stopButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/forwardButton" />
 
     <Button
         android:id="@+id/rightButton"
@@ -64,9 +64,9 @@
         android:layout_height="wrap_content"
         android:onClick="onRight"
         android:text="Right"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/stopButton"
         app:layout_constraintStart_toEndOf="@+id/stopButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/stopButton" />
 
     <TextView
         android:id="@+id/textViewHttpResult"
@@ -78,15 +78,60 @@
 
     <SeekBar
         android:id="@+id/heightSeekBar"
-        android:layout_width="111dp"
-        android:layout_height="32dp"
+        android:layout_width="106dp"
+        android:layout_height="70dp"
         android:max="10"
         android:min="0"
         android:progress="5"
         android:rotation="270"
+        app:layout_constraintBottom_toTopOf="@+id/stretchSeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/backButton"
+        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+
+    <SeekBar
+        android:id="@+id/stretchSeekBar"
+        android:layout_width="182dp"
+        android:layout_height="28dp"
+        android:max="10"
+        android:min="0"
+        android:progress="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="409dp"
+        android:layout_height="378dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHttpResult">
+
+    </WebView>
+
+    <SeekBar
+        android:id="@+id/cameraPitchSeekBar"
+        android:layout_width="145dp"
+        android:layout_height="19dp"
+        android:max="10"
+        android:min="0"
+        android:progress="0"
+        app:layout_constraintBottom_toTopOf="@+id/forwardButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/cameraYawSeekBar"
+        android:layout_width="182dp"
+        android:layout_height="337dp"
+        android:max="10"
+        android:min="0"
+        android:progress="3"
+        android:rotation="270"
+        app:layout_constraintEnd_toEndOf="@+id/webView"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHttpResult" />
 
 </android.support.constraint.ConstraintLayout>

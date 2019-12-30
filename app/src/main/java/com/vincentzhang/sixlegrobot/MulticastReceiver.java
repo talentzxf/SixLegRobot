@@ -17,11 +17,11 @@ public class MulticastReceiver implements Runnable {
     Integer multicast_port = 6666;
     String robotIp = "192.168.17.59";
 
-    Activity activity;
+    MainActivity activity;
 
     Pattern p = Pattern.compile("Robot:(.*):");
 
-    void setActivity(Activity activity){
+    void setActivity(MainActivity activity){
         this.activity = activity;
     }
 
@@ -74,6 +74,9 @@ public class MulticastReceiver implements Runnable {
                         Log.i(tag, "ip is:" + this.robotIp);
                         setTextViewText("Ip is:" + this.robotIp + "! Press button to control robot now.");
                         received = true;
+
+                        // Start video
+                        activity.startView(this.robotIp);
                     } else {
                         Log.e(tag, "Protocol mismatch!");
                         setTextViewText("Protocol mismatch!");
