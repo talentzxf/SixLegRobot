@@ -10,8 +10,10 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -38,7 +40,8 @@ public class IKControlActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ik_control);
 
-        SeekBar legHeightSeekBar = findViewById(R.id.heightSeekBar);
+
+        SeekBar legHeightSeekBar = findViewById(R.id.legHeightSeekBar);
         legHeightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -58,6 +61,8 @@ public class IKControlActivity extends Activity {
             }
         });
     }
+
+
 
     void sendCommand(int method, String remoteCommand) {
         Utils.sendCommand(this, method, remoteCommand);

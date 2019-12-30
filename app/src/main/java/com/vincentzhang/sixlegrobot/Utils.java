@@ -35,18 +35,18 @@ public class Utils {
                         @Override
                         public void onResponse(String response) {
                             // Display the first 500 characters of the response string.
-                            Toast.makeText(activity, "Response is: " + response, Toast.LENGTH_LONG);
+                            Toast.makeText(activity, "Response is: " + response, Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(activity, "That didn't work!" + error, Toast.LENGTH_LONG);
+                    Toast.makeText(activity, "That didn't work!" + error, Toast.LENGTH_LONG).show();
                 }
             });
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         } else {
-            Toast.makeText(activity, "Haven't gotten ip address", Toast.LENGTH_LONG);
+            Toast.makeText(activity, "Haven't gotten ip address", Toast.LENGTH_LONG).show();
         }
     }
 }
