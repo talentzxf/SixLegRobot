@@ -34,7 +34,6 @@ import java.net.URISyntaxException;
 
 public class MainActivity extends AppCompatActivity {
 
-    MulticastReceiver multicastReceiver = new MulticastReceiver();
     SeekBar heightSeekBar;
     SeekBar stretchSeekBar;
     SeekBar cameraPitchSeekBar;
@@ -44,17 +43,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         initSeekBars();
 
         // Create another thread to listen to multicast
-        multicastReceiver.setActivity(this);
-        Thread t = new Thread(multicastReceiver);
+        Utils.getMulticastReceiver().setActivity(this);
+        Thread t = new Thread(Utils.getMulticastReceiver());
         t.start();
     }
 
-    private void initSeekBars(){
+    private void initSeekBars() {
         heightSeekBar = findViewById(R.id.heightSeekBar);
 
         heightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         cameraPitchSeekBar = findViewById(R.id.cameraPitchSeekBar);
-        cameraPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+        cameraPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         cameraYawSeekBar = findViewById(R.id.cameraYawSeekBar);
-        cameraYawSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+        cameraYawSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -137,12 +135,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void startView(final String ip){
+    public void startView(final String ip) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 WebView webView = findViewById(R.id.webView);
-                String videoAddress = "http://"+ ip + ":8081";
+                String videoAddress = "http://" + ip + ":8081";
                 webView.getSettings().setUseWideViewPort(true);
                 webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
                 webView.getSettings().setLoadWithOverviewMode(true);
@@ -152,67 +150,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private String base_url = "http://%s:5001";
-
-    private String getUrl(String postFix) {
-        if (this.multicastReceiver.getRobotIp().equalsIgnoreCase("unknown")) {
-            return null;
-        }
-
-        return String.format(this.base_url, this.multicastReceiver.getRobotIp()) + postFix;
-    }
-
     // Default is GET
     void sendCommand(String remoteCommand) {
         sendCommand(Request.Method.GET, remoteCommand);
     }
 
     void sendCommand(int method, String remoteCommand) {
-        final TextView textView = findViewById(R.id.textViewHttpResult);
-
-        String stop_url = getUrl(remoteCommand);
-        if (stop_url != null) {
-            RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest stringRequest = new StringRequest(method, stop_url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
-                            textView.setText("Response is: " + response);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    textView.setText("That didn't work!" + error);
-                }
-            });
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
-        } else {
-            textView.setText("Haven't gotten ip address");
-        }
+        Utils.sendCommand(this, method, remoteCommand);
     }
 
     public void onStop(View view) {
@@ -236,8 +180,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAdjustPos(View view) {
-        // TODO: Switch to adjust device pos activity
         Intent intent = new Intent(this, DeviceRotationActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void onIKControl(View view) {
+        Intent intent = new Intent(this, IKControlActivity.class);
         startActivity(intent);
     }
 }

@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:onClick="onAdjustPos"
         android:text="AdjustPos"
-        app:layout_constraintBottom_toBottomOf="@+id/backButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -98,8 +98,10 @@
         android:progress="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.301"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+        app:layout_constraintTop_toBottomOf="@+id/backButton"
+        app:layout_constraintVertical_bias="0.171" />
 
     <WebView
         android:id="@+id/webView"
@@ -133,5 +135,14 @@
         android:rotation="270"
         app:layout_constraintEnd_toEndOf="@+id/webView"
         app:layout_constraintTop_toBottomOf="@+id/textViewHttpResult" />
+
+    <Button
+        android:id="@+id/IKControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IKControlMode"
+        android:onClick="onIKControl"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/adjustPosButton" />
 
 </android.support.constraint.ConstraintLayout>
