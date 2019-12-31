@@ -27,6 +27,10 @@ public class Utils {
     }
 
     public static void sendCommand(final Activity activity, int method, String remoteCommand) {
+        sendCommand(activity, method, remoteCommand, false);
+    }
+
+    public static void sendCommand(final Activity activity, int method, String remoteCommand, final boolean isToastResponse) {
         String url = Utils.getUrl(remoteCommand);
         if (url != null) {
             RequestQueue queue = Volley.newRequestQueue(activity);
@@ -35,7 +39,10 @@ public class Utils {
                         @Override
                         public void onResponse(String response) {
                             // Display the first 500 characters of the response string.
-                            Toast.makeText(activity, "Response is: " + response, Toast.LENGTH_LONG).show();
+                            if(isToastResponse){
+                                Toast.makeText(activity, "Response is: " + response, Toast.LENGTH_LONG).show();
+                            }
+
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -46,7 +53,7 @@ public class Utils {
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         } else {
-            Toast.makeText(activity, "Haven't gotten ip address", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Haven't gotten ip address yet, please be patient!", Toast.LENGTH_LONG).show();
         }
     }
 }
