@@ -1,6 +1,7 @@
 package com.vincentzhang.sixlegrobot;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -9,6 +10,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Utils {
     static private String base_url = "http://%s:5001";
@@ -30,18 +35,22 @@ public class Utils {
         sendCommand(activity, method, remoteCommand, false);
     }
 
+    public static Map<Activity, RequestQueue> requestQueueMap = new ConcurrentHashMap();
+
     public static void sendCommand(final Activity activity, int method, String remoteCommand, final boolean isToastResponse) {
         String url = Utils.getUrl(remoteCommand);
         if (url != null) {
-            RequestQueue queue = Volley.newRequestQueue(activity);
+            RequestQueue queue = requestQueueMap.get(activity);
+            if (queue == null) {
+                queue = Volley.newRequestQueue(activity);
+                requestQueueMap.put(activity, queue);
+            }
+            
             StringRequest stringRequest = new StringRequest(method, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
-                            if(isToastResponse){
-                                Toast.makeText(activity, "Response is: " + response, Toast.LENGTH_LONG).show();
-                            }
+                            Log.i("Utils.sendCommand", "Response is: " + response);
 
                         }
                     }, new Response.ErrorListener() {

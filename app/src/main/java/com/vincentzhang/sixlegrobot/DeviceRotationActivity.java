@@ -7,6 +7,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.android.volley.Request;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,6 +32,7 @@ public class DeviceRotationActivity extends Activity {
         // Create our Preview view and set it as the content of our
         // Activity
         mRenderer = new MyRenderer();
+        mRenderer.setActivitiy(this);
         mGLSurfaceView = new GLSurfaceView(this);
         mGLSurfaceView.setRenderer(mRenderer);
         setContentView(mGLSurfaceView);
@@ -56,6 +60,8 @@ public class DeviceRotationActivity extends Activity {
         private Cube mCube;
         private Sensor mRotationVectorSensor;
         private final float[] mRotationMatrix = new float[16];
+        private Activity activity;
+        private long lastSentTime = -1;
 
         public MyRenderer() {
             // find the rotation-vector sensor
@@ -89,6 +95,21 @@ public class DeviceRotationActivity extends Activity {
                 // rotation-vector, which is what we want.
                 SensorManager.getRotationMatrixFromVector(
                         mRotationMatrix, event.values);
+
+                String degrees = event.values[0] + "," +
+                        event.values[1] + "," +
+                        event.values[2] + "," +
+                        event.values[3];
+
+                Log.i("DeviceRotationActivity", "Sensor information:" + degrees);
+
+                // Sending incline command every second
+                long curTime = System.currentTimeMillis();
+                if(lastSentTime == -1 || curTime - lastSentTime > 500){
+                    Utils.sendCommand(activity, Request.Method.PUT, "/robot/incline?angles=" + degrees);
+                    lastSentTime = curTime;
+                }
+
             }
         }
 
@@ -123,6 +144,10 @@ public class DeviceRotationActivity extends Activity {
             gl.glClearColor(1, 1, 1, 1);
         }
 
+        public void setActivitiy(Activity activity) {
+            this.activity = activity;
+        }
+
         class Cube {
             // initialize our cube
             private FloatBuffer mVertexBuffer;
@@ -131,10 +156,14 @@ public class DeviceRotationActivity extends Activity {
 
             public Cube() {
                 final float vertices[] = {
-                        -1, -1, -1, 1, -1, -1,
-                        1, 1, -1, -1, 1, -1,
-                        -1, -1, 1, 1, -1, 1,
-                        1, 1, 1, -1, 1, 1,
+                        -1, -1, -0.5f,
+                        1, -1, -0.5f,
+                        1, 1, -0.5f,
+                        -1, 1, -0.5f,
+                        -1, -1, 0.5f,
+                        1, -1, 0.5f,
+                        1, 1, 0.5f,
+                        -1, 1, 0.5f,
                 };
                 final float colors[] = {
                         0, 0, 0, 1, 1, 0, 0, 1,
